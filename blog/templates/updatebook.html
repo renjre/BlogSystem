@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-6">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token%}
+                    <label class="form-label" for="">Title</label>
+                    <input class="form-control" type="text" name="title" id="" value="{{book.book_title}}"><br>
+                    
+                    <label class="form-label" for="">Description</label>
+                    <textarea class="form-control" type="text" name="desc" id="" style="height: 100px; width: 550px;">{{book.book_desc}}</textarea><br>
+            
+                    <label class="form-label" for="">image</label>
+                    <input class="form-control" type="file" name="newimg" id="" value="media//{{book.book_img}}  ">
+                    <br>
+                    <input class="btn btn-outline-primary" type="submit" name="" id="">
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

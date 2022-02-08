@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-2">
+    <h1>Hello, {% if user.is_authenticated %}
+        {{ user.username }}.
+        {% else %} Guest
+        {% endif %}
+    </h1>
+</div>
+
+<div class="container mt-5">
+
+    <div class="row">
+        {% for d in data reversed %}
+        <div class="col-6">
+            <div class="card-group">
+                <div class="card m-5 shadow">
+
+                    <img src="/media/{{d.book_img}}" class="card-img-top" alt='' id="bookimg">
+                    <div class="card-body">
+                        <h5 class="card-title">{{d.book_title}}</h5>
+                        <span>{{d.create_on|date:"DATETIME_FORMAT"}}</span><br> update on
+                        <span>{{d.update_on|date:"DATETIME_FORMAT"}}</span>
+                        <p class="card-text" id="description">{{d.book_desc|capfirst|truncatechars:100}}</p>
+                        <a href="{% url 'seebook' d.pk %}" class="btn btn-primary">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+</div>
+
+<script>
+    {% if user.is_authenticated %}
+
+    $("document").ready(function () {
+        alert("You are logged in as: {{ user.username }}")
+    });
+    
+    {% endif %}
+</script>
+
+{% endblock %}

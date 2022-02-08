@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    {% for d in book %}
+
+    <h2 class="">{{d.book_title}}</h2>
+    <hr>
+    <img src="/media/{{d.book_img}}" alt="">
+    <hr>
+    <p class="card-text mb-5" id="description">{{d.book_desc}}</p>
+
+    {% if request.user.is_authenticated %}
+    <hr>
+
+    <div class="form-check">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input class="form-check-input" type="checkbox" value="" name="like" id="likeunlike">
+            <label class="form-check-label" for="flexCheckDefault">
+                Like this Book
+            </label>
+            <input id="like" type="submit" value="Like" style="display: none;">
+        </form>
+    </div>
+    {% endif %}
+
+
+    {% if user == d.create_by or request.user.is_superuser %}
+    <hr>
+    <form action="{% url 'delete' d.pk %}" method="POST" class="d-inline">
+        {% csrf_token %}
+        <input type="submit" value="Delete book" id='deletebtn' class="btn btn-sm btn-danger mb-5">
+    </form>
+
+    <a href="{% url 'update' d.pk %}" class="btn btn-sm btn-primary mx-3 mb-5">Update book</a>
+    {% endif %}
+
+
+    {% endfor %}
+</div>
+<hr>
+<hr>
+
+<div class="container ">
+    <h2>Comment</h2>
+    {% if error %}
+    {{ error }}
+    {% endif %}
+
+    {% for c in comment %}
+    Comment by: {{c.comment_by}} at {{c.comment_on}}<br>
+    <span>{{c.comment}}</span>
+    <div style="display: none;" id="hidediv">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="comment" id="" required value="{{c.comment}}"
+                oninvalid="this.setCustomValidity('Please provide comment')">
+            <input type="submit" value="Comment" name="" id="">
+        </form>
+        <button class="btn btn-sm btn-outline-primary" id="cancelbtn">Cancel</button>
+    </div>
+    <br><br>
+
+    {% for d in book %}
+    {% if user == c.comment_by or request.user.is_superuser %}
+
+    <!-- <button id="editbtn">Edit</button> -->
+    <a href="{% url 'updatecomm' c.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+    <a href="{% url 'commdelete' c.id %}" class="btn btn-sm btn-outline-primary mx-3">Delete</a><br><br>
+
+    {% endif %}
+
+    {% endfor %}
+    {% endfor %}
+
+    {% if request.user.is_authenticated %}
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="comment" id="" required placeholder="Comment here"
+            oninvalid="this.setCustomValidity('Please provide comment')">
+        <input type="submit" value="Comment" name="" id="">
+    </form>
+    {% endif %}
+
+
+    <p class="mb-4">comments...</p>
+
+    <!--
+    </div> --------------------------------------------------- -->
+    <script>
+
+        $("#likeunlike").on('change', function(){
+            $("#like").click()
+        })
+
+    </script>
+
+    {% endblock %}
